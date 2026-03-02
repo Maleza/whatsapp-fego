@@ -11,6 +11,50 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// 1. Menú en admin
+add_action('admin_menu', function () {
+    add_options_page(
+        'WhatsApp Float Button',
+        'WhatsApp Float Button',
+        'manage_options',
+        'wafb-settings',
+        'wafb_render_settings_page'
+    );
+});
+
+// 2. Registrar ajustes
+add_action('admin_init', function () {
+    register_setting('wafb_settings_group', 'wafb_phone');
+    register_setting('wafb_settings_group', 'wafb_message');
+    register_setting('wafb_settings_group', 'wafb_show_on_home');
+});
+
+
+function wafb_render_settings_page() { ?>
+    <div class="wrap">
+        <h1>WhatsApp Float Button</h1>
+        <form method="post" action="options.php">
+            <?php settings_fields('wafb_settings_group'); ?>
+            <table class="form-table">
+                <tr>
+                    <th>Número WhatsApp (con código país)</th>
+                    <td><input type="text" name="wafb_phone" value="<?php echo esc_attr(get_option('wafb_phone', '')); ?>" class="regular-text"></td>
+                </tr>
+                <tr>
+                    <th>Mensaje por defecto</th>
+                    <td><input type="text" name="wafb_message" value="<?php echo esc_attr(get_option('wafb_message', 'Hola, quiero más información')); ?>" class="regular-text"></td>
+                </tr>
+                <tr>
+                    <th>Mostrar solo en portada</th>
+                    <td><input type="checkbox" name="wafb_show_on_home" value="1" <?php checked(get_option('wafb_show_on_home', 0), 1); ?>></td>
+                </tr>
+            </table>
+            <?php submit_button('Guardar cambios'); ?>
+        </form>
+    </div>
+<?php }
+
+
 class WFWP_WhatsApp_Float_Button
 {
     private const OPTION_NAME = 'wfwp_options';
