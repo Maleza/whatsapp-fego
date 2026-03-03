@@ -3,7 +3,7 @@
  * Plugin Name: WhatsApp Float Button (Private)
  * Description: Botón flotante de WhatsApp con estilos, animaciones y mensajes configurables para uso privado.
  * Version: 1.0.0
- * Author: Private Admin
+ * Author: Felipe Godoy
  * License: GPL-2.0-or-later
  */
 
@@ -409,3 +409,17 @@ class WFWP_WhatsApp_Float_Button
 }
 
 new WFWP_WhatsApp_Float_Button();
+
+
+// Shortcode: [whatsapp_float_button]
+add_shortcode('whatsapp_float_button', function () {
+    $phone   = preg_replace('/\D+/', '', get_option('wafb_phone', ''));
+    $message = rawurlencode(get_option('wafb_message', 'Hola, quiero más información'));
+
+    if (!$phone) return ''; // evita mostrar si no hay número
+
+    $url = "https://wa.me/{$phone}?text={$message}";
+
+    return '<a href="'.esc_url($url).'" class="wafb-btn" target="_blank" rel="noopener noreferrer" aria-label="Chat en WhatsApp">💬</a>';
+});
+
